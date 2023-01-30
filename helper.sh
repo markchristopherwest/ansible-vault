@@ -4,10 +4,12 @@ readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Check to see if this has run before
 if [ -f inventory.ini ]; then
-    read -p "Found inventory.ini ~ Delete this file & generate new inventory.ini via Vagrant? " -n 1 -r
+    read -p "Found inventory.ini ~ Delete this + keys/tokens & generate new inventory.ini via Vagrant? " -n 1 -r
     # echo    # (optional) move to a new line
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         rm -rf inventory.ini
+        rm -rf rootKey
+        rm -rf unsealKey
         echo
         echo "Deleted Ansible Inventory!"
         echo
@@ -29,13 +31,15 @@ if [ -f inventory.ini ]; then
         done
         cat inventory.ini
     else
+        echo " \n"
         echo "Using Existing Inventory"
     fi
 fi
 
 
 
-ansible-playbook main.yml --check
+ansible-playbook main.yml
+echo 'ansible-playbook main.yml --tags="unseal"'
 
 
 echo "Done & Done."

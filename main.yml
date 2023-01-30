@@ -33,3 +33,45 @@
       content: "{{ vault_init_parsed.root_token }}"
       dest: "{{root_token_dir_output}}/rootkey"
     delegate_to: localhost
+- hosts: all
+  become: yes
+  tasks:
+  - name: Parse output of vault init
+    set_fact:
+      vault_token: "{{ lookup('file', 'rootKey/rootKey') }}"
+      vault_unseal_0: "{{ lookup('file', 'unsealKey/unseal_key_0') }}"
+      vault_unseal_1: "{{ lookup('file', 'unsealKey/unseal_key_1') }}"
+      vault_unseal_2: "{{ lookup('file', 'unsealKey/unseal_key_2') }}"
+      vault_unseal_3: "{{ lookup('file', 'unsealKey/unseal_key_3') }}"
+      vault_unseal_4: "{{ lookup('file', 'unsealKey/unseal_key_4') }}"
+    tags: unseal
+  - name: Unseal Vault
+    shell: "vault operator unseal {{ vault_unseal_0 }}"
+    environment:
+      VAULT_ADDR: "https://127.0.0.1:8200"
+      VAULT_TOKEN:  "{{ lookup('file', 'rootKey/rootKey') }}"
+    tags: unseal
+  - name: Unseal Vault
+    shell: "vault operator unseal {{ vault_unseal_1 }}"
+    environment:
+      VAULT_ADDR: "https://127.0.0.1:8200"
+      VAULT_TOKEN:  "{{ lookup('file', 'rootKey/rootKey') }}"
+    tags: unseal
+  - name: Unseal Vault
+    shell: "vault operator unseal {{ vault_unseal_2 }}"
+    environment:
+      VAULT_ADDR: "https://127.0.0.1:8200"
+      VAULT_TOKEN:  "{{ lookup('file', 'rootKey/rootKey') }}"
+    tags: unseal
+  - name: Unseal Vault
+    shell: "vault operator unseal {{ vault_unseal_3 }}"
+    environment:
+      VAULT_ADDR: "https://127.0.0.1:8200"
+      VAULT_TOKEN:  "{{ lookup('file', 'rootKey/rootKey') }}"
+  - name: Unseal Vault
+    shell: "vault operator unseal {{ vault_unseal_4 }}"
+    environment:
+      VAULT_ADDR: "https://127.0.0.1:8200"
+      VAULT_TOKEN:  "{{ lookup('file', 'rootKey/rootKey') }}"
+    tags: unseal
+    
